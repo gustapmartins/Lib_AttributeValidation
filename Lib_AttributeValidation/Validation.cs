@@ -1,4 +1,5 @@
 ﻿using Lib_AttributeValidation.Cpf;
+using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace Lib_AttributeValidation;
@@ -54,5 +55,108 @@ public class Validation
 
         //calcular o segundo digito verificador
         return segundoDigito;
+    }
+
+
+    /// <summary>
+    /// Validar a senha
+    /// </summary>
+    /// <param name="senha"></param>
+    /// <param name="numeroDeCaracteres"></param>
+    /// <returns>Retorna um valor booleano, se a senha for valida ele trás true se não false</returns>
+    public static bool ValidatePassword(string senha, int numeroDeCaracteres)
+    {
+        // Verificar comprimento mínimo
+        if (senha.Length == 0 || senha.Length < numeroDeCaracteres) return false;
+
+        // Verificar se contém pelo menos uma letra maiúscula
+        if (!senha.Any(char.IsUpper)) return false;
+
+        // Verificar se contém pelo menos uma letra minúscula
+        if (!senha.Any(char.IsLower)) return false;
+
+        // Verificar se contém pelo menos um número
+        if (!senha.Any(char.IsDigit)) return false;
+
+        // Verificar se contém pelo menos um caractere especial
+        if (!senha.Any(ch => !char.IsLetterOrDigit(ch))) return false;
+
+        return true;
+    }
+
+    /// <summary>
+    /// Valida o codigo postal
+    /// </summary>
+    /// <param name="cep"></param>
+    /// <returns>Retorna um valor booleano, se o cep for valido ele trás true se não false</returns>
+    public static async Task<bool> ValidaCep(string cep)
+    {
+        string apiUrl = $"https://viacep.com.br/ws/{cep}/json/";
+
+        HttpClient httpClient = new();
+
+        var response = await httpClient.GetAsync(apiUrl);
+
+        if(response.IsSuccessStatusCode)
+        {
+            string responseData = await response.Content.ReadAsStringAsync();
+            // Verifica se a resposta contém um indicativo de CEP não encontrado
+            if (!responseData.Contains("erro\": true"))
+            {
+                // Converte a resposta para um objeto EnderecoViaCep
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Valida o codigo postal
+    /// </summary>
+    /// <param name="url"></param>
+    /// <returns>Retorna um valor booleano, se o cep for valido ele trás true se não false</returns>
+    public static bool ValidarURL(string url)
+    {
+        url = url.Trim();
+
+        Regex pattern = new Regex("@\"^(?:http(s)?:\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:/?#[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$\" ");
+        Match match = pattern.Match(url);
+        return match.Success;
+    }
+
+    /// <summary>
+    /// Valida a data 
+    /// </summary>
+    /// <param name="data"></param>
+    /// <returns>Retorna um valor booleano, se a data for valida, ele trás true se não false</returns>
+    public static bool ValidarData(string data)
+    {
+        DateTime dataConvertida;
+
+        var resultadoData = DateTime.TryParseExact(data, "dd/MM/yyyy", 
+                CultureInfo.InvariantCulture, DateTimeStyles.None,out dataConvertida);
+
+        if(resultadoData)
+        {
+            if(dataConvertida.Year >= 1900 && dataConvertida <= DateTime.Today.AddYears(60))
+            {
+                return true;
+            }else
+            {
+                return false;
+            }
+        }
+
+        return resultadoData;
+    }
+
+    /// <summary>
+    /// Valida o codigo postal
+    /// </summary>
+    /// <param name="cnpj"></param>
+    /// <returns>Retorna um valor booleano, se o cep for valido ele trás true se não false</returns>
+    public static bool ValidarCnpj(string cnpj)
+    {
+        return false;
     }
 }
