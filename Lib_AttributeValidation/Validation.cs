@@ -1,4 +1,5 @@
-﻿using Lib_AttributeValidation.Cpf;
+﻿using Lib_AttributeValidation.Common;
+using Lib_AttributeValidation.Cpf;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -151,12 +152,36 @@ public class Validation
     }
 
     /// <summary>
-    /// Valida o codigo postal
+    /// Valida o cnpj
     /// </summary>
     /// <param name="cnpj"></param>
     /// <returns>Retorna um valor booleano, se o cep for valido ele trás true se não false</returns>
     public static bool ValidarCnpj(string cnpj)
     {
-        return false;
+        // Remover caracteres não numéricos
+        var digitosCNPJ = new string(cnpj.Where(char.IsDigit).ToArray());
+  
+        // Verificar se todos os dígitos são iguais (caso contrário, o CNPJ é inválido)
+        if (digitosCNPJ.Distinct().Count() == 1)
+        {
+            return false;
+        }
+
+        // Verificar se o CNPJ tem 14 dígitos
+        if (digitosCNPJ.Length != 14)
+        {
+            return false;
+        }
+
+        // Calcular os dígitos verificadores
+        int[] multiplicadoresPrimeiroDigito = { 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2 };
+        int primeiroDigitoVerificador = CnpjValidation.CalcularDigitoVerificador(digitosCNPJ, multiplicadoresPrimeiroDigito);
+
+        int[] multiplicadoresSegundoDigito = { 6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2 };
+        int segundoDigitoVerificador = CnpjValidation.CalcularDigitoVerificador(digitosCNPJ + primeiroDigitoVerificador, multiplicadoresSegundoDigito);
+
+        // Verificar se os dígitos verificadores calculados coincidem com os fornecidos
+        return digitosCNPJ.EndsWith($"{primeiroDigitoVerificador}{segundoDigitoVerificador}");
     }
 }
+

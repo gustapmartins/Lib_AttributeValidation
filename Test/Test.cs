@@ -64,5 +64,28 @@ namespace Test
             
             Assert.Equal(resultadoEsperado, result);
         }
+
+        [Theory]
+        [InlineData("15/05/2083", true)] //Validando a data limite que se pode registrar
+        [InlineData("15/05/2023", true)] //Validando a data limite que se pode registrar
+        [InlineData("12/09/1800", false)] // Validando uma data menor que 1900
+        public void ValidaData(string data, bool resultadoEsperado)
+        {
+            bool result = Validation.ValidarData(data);
+
+            Assert.Equal(resultadoEsperado, result);
+        }
+
+        [Theory]
+        [InlineData("05.982.145/0001-59", true)]  // Substitua com CNPJs válidos ou inválidos
+        [InlineData("98.765.432/0001-21", false)]
+        public void TestValidarCnpj(string cnpj, bool resultadoEsperado)
+        {
+            // Act
+            bool result = Validation.ValidarCnpj(cnpj);
+
+            // Assert
+            Assert.Equal(resultadoEsperado, result);
+        }
     }
 }
