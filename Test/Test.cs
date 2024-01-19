@@ -87,5 +87,32 @@ namespace Test
             // Assert
             Assert.Equal(resultadoEsperado, result);
         }
+
+        [Theory]
+        [InlineData("http://www.example.com", true)]
+        [InlineData("https://subdomain.example.com/path?query=123", true)]
+        [InlineData("invalid-url", false)]
+        [InlineData("ftp://ftp.example.com", false)]
+        public void TestarValidarURL(string url, bool resultadoEsperado)
+        {
+
+            // Act (Ação)
+            bool resultado = Validation.ValidarURL(url);
+
+            // Assert (Afirmação)
+            Assert.Equal(resultadoEsperado, resultado);
+        }
+
+        [Theory]
+        [InlineData("4743321660797238", true)]  // Validar cartão de credito
+        [InlineData("4743321660797555", false)]
+        [InlineData("4743321660", false)] // Validar o cartao menor que 13 digitos
+        [InlineData("47433216607975558", false)] // Validar o cartao maior que 16 digitos
+        public void TestValidaCartaoRegraDeLuhn(string cartao, bool resultadoEsperado)
+        {
+            bool result = Validation.ValidaCartao(cartao);
+
+            Assert.Equal(resultadoEsperado, result);
+        }
     }
 }

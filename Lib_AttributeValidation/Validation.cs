@@ -32,7 +32,6 @@ public class Validation
         return Regex.IsMatch(telefone, pattern);
     }
 
-
     /// <summary>
     /// Classe para validar CPF 
     /// </summary>
@@ -57,7 +56,6 @@ public class Validation
         //calcular o segundo digito verificador
         return segundoDigito;
     }
-
 
     /// <summary>
     /// Validar a senha
@@ -152,6 +150,36 @@ public class Validation
     }
 
     /// <summary>
+    /// Valida o cartao com a regra de Luhn
+    /// </summary>
+    /// <param name="cartao"></param>
+    /// <returns>Retorna um valor booleano, se o cep for valido ele trás true se não false</returns>
+    public static bool ValidaCartao(string cartao)
+    {
+        //Remover caracteres não númericos 
+        string digitoCartao = new string(cartao.Where(char.IsDigit).ToArray());
+
+        if(digitoCartao.Length < 13 && digitoCartao.Length > 16)
+        {
+            return false;
+        }
+        //Verificar se possui
+        if (digitoCartao.Distinct().Count() == 1) 
+        {
+            return false;
+        }
+
+        // Verificar a validação do algoritmo de Luhn
+        if (!LuhnValidation.ValidarLuhn(digitoCartao))
+        {
+            return false;
+        }
+
+        // Se passou por todas as verificações anteriores, consideramos o cartão válido
+        return true;
+    }
+
+    /// <summary>
     /// Valida o cnpj
     /// </summary>
     /// <param name="cnpj"></param>
@@ -159,7 +187,7 @@ public class Validation
     public static bool ValidarCnpj(string cnpj)
     {
         // Remover caracteres não numéricos
-        var digitosCNPJ = new string(cnpj.Where(char.IsDigit).ToArray());
+        string digitosCNPJ = new string(cnpj.Where(char.IsDigit).ToArray());
   
         // Verificar se todos os dígitos são iguais (caso contrário, o CNPJ é inválido)
         if (digitosCNPJ.Distinct().Count() == 1)
