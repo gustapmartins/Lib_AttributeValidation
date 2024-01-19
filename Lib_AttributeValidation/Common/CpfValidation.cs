@@ -2,12 +2,12 @@
 
 public class CpfValidation
 {
-    public static string TratarCpf(string cpf)
+    protected internal static string TratarCpf(string cpf)
     {
         return cpf.Replace(".", "").Replace("-", "");
     }
 
-    public static bool ValidarPrimeiroDigito(string cpf)
+    protected internal static bool ValidarPrimeiroDigito(string cpf)
     {
 
         // Calcular o primeiro dígito verificador
@@ -26,7 +26,7 @@ public class CpfValidation
         return int.Parse(cpf[9].ToString()) == digito1;
     }
 
-    public static bool ValidarSegundoDigito(string cpf)
+    protected internal static bool ValidarSegundoDigito(string cpf)
     {
         int soma = 0;
         for (int i = 0; i < 10; i++)

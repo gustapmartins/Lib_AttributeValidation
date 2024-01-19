@@ -2,7 +2,7 @@
 
 public class CnpjValidation
 {
-    public static int CalcularDigitoVerificador(string baseNumerica, int[] multiplicadores)
+    protected internal static int CalcularDigitoVerificador(string baseNumerica, int[] multiplicadores)
     {
         int soma = 0;
 

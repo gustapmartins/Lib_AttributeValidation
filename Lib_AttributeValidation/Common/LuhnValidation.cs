@@ -2,7 +2,7 @@
 
 public class LuhnValidation
 {
-    public static bool ValidarLuhn(string numeros)
+    protected internal static bool ValidarLuhn(string numeros)
     {
         int[] numero = numeros.Select(c => int.Parse(c.ToString())).ToArray();
 
@@ -13,7 +13,7 @@ public class LuhnValidation
         return numero.Sum() % 10 == 0;    
     }
 
-    public static void SomaDosDigitosAlternados(int[] numero)
+    protected internal static void SomaDosDigitosAlternados(int[] numero)
     {
         for (int i = numero.Length - 2; i >= 0; i -= 2)
         {
@@ -24,7 +24,7 @@ public class LuhnValidation
         }
     }
 
-    public static void SomaDosDigitosRemanescentes(int[] numero)
+    protected internal static void SomaDosDigitosRemanescentes(int[] numero)
     {
         for (int i = numero.Length - 1; i >= 0; i -= 2)
         {
